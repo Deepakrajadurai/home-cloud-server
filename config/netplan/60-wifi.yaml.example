@@ -1,0 +1,13 @@
+# Example netplan WiFi config. scripts/setup-wifi.sh writes this for you.
+# Find your interface name with: ip link | grep wl
+# Save as /etc/netplan/60-wifi.yaml, then: sudo chmod 600 ... && sudo netplan apply
+
+network:
+  version: 2
+  wifis:
+    wlp0s20f3:
+      dhcp4: true
+      optional: true
+      access-points:
+        "YOUR_WIFI_NAME":
+          password: "YOUR_WIFI_PASSWORD"

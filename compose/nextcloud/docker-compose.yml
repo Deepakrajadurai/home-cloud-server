@@ -1,0 +1,38 @@
+# Nextcloud + PostgreSQL
+# All values come from .env in this folder (copy .env.example first).
+
+services:
+  db:
+    image: postgres:15
+    container_name: nextcloud-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-nextcloud}
+      POSTGRES_USER: ${POSTGRES_USER:-nextcloud}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - ${DB_DIR:?Set DB_DIR in .env}:/var/lib/postgresql/data
+
+  nextcloud:
+    image: nextcloud:${NEXTCLOUD_VERSION:-latest}
+    container_name: nextcloud
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "${NEXTCLOUD_PORT:-8080}:80"
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: ${POSTGRES_DB:-nextcloud}
+      POSTGRES_USER: ${POSTGRES_USER:-nextcloud}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER:?Set NEXTCLOUD_ADMIN_USER in .env}
+      NEXTCLOUD_ADMIN_PASSWORD: ${NEXTCLOUD_ADMIN_PASSWORD:?Set NEXTCLOUD_ADMIN_PASSWORD in .env}
+      NEXTCLOUD_TRUSTED_DOMAINS: ${NEXTCLOUD_TRUSTED_DOMAINS:-localhost}
+    volumes:
+      # App code and installed apps (fast SSD)
+      - ${APP_DIR:?Set APP_DIR in .env}:/var/www/html
+      # Configuration (fast SSD)
+      - ${CONFIG_DIR:?Set CONFIG_DIR in .env}:/var/www/html/config
+      # User files (large external HDD)
+      - ${DATA_DIR:?Set DATA_DIR in .env}:/var/www/html/data

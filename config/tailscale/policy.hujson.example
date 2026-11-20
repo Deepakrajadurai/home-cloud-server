@@ -1,0 +1,29 @@
+// Tailscale access policy (paste into Access controls > JSON editor).
+// Replace <SERVER_TAILSCALE_IP> with the server's 100.x.y.z address.
+{
+  "grants": [
+    // Your own devices keep full access to each other.
+    {
+      "src": ["autogroup:member"],
+      "dst": ["*"],
+      "ip":  ["*"],
+    },
+    // Friends who joined through a share invite can only reach
+    // Nextcloud (8080) and Open WebUI (3000) on the server.
+    {
+      "src": ["autogroup:shared"],
+      "dst": ["<SERVER_TAILSCALE_IP>"],
+      "ip":  ["tcp:8080", "tcp:3000"],
+    },
+  ],
+
+  // Default Tailscale SSH rule (unused here, regular OpenSSH is used instead).
+  "ssh": [
+    {
+      "action": "check",
+      "src":    ["autogroup:member"],
+      "dst":    ["autogroup:self"],
+      "users":  ["autogroup:nonroot", "root"],
+    },
+  ],
+}

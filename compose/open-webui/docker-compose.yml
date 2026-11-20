@@ -1,0 +1,21 @@
+# Open WebUI: a branded, multi-user chat interface and OpenAI-compatible API
+# on top of the Ollama instance running on the host.
+#
+# network_mode: host lets the container reach Ollama on 127.0.0.1,
+# so Ollama itself never has to be exposed to the network.
+
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:${OPEN_WEBUI_TAG:-main}
+    container_name: open-webui
+    network_mode: host
+    restart: always
+    environment:
+      PORT: ${PORT:-3000}
+      WEBUI_NAME: ${WEBUI_NAME:-MyAI}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://127.0.0.1:11434}
+      WEBUI_SECRET_KEY: ${WEBUI_SECRET_KEY:?Set WEBUI_SECRET_KEY in .env}
+      DEFAULT_USER_ROLE: ${DEFAULT_USER_ROLE:-pending}
+      ENABLE_ADMIN_CHAT_ACCESS: ${ENABLE_ADMIN_CHAT_ACCESS:-false}
+    volumes:
+      - ./data:/app/backend/data

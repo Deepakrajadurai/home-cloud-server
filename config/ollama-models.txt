@@ -1,0 +1,15 @@
+# Models pulled by scripts/05-install-ollama.sh, one per line.
+# Chosen to fit a 4 GB GPU (GTX 1650). Check https://ollama.com/library for newer versions.
+
+# General chat
+llama3.2:3b
+# Strong all-rounder with optional reasoning, good with other languages
+qwen3:4b
+# Chat plus image understanding
+gemma3:4b
+# Coding assistant
+qwen2.5-coder:3b
+# Small step-by-step reasoning model
+deepseek-r1:1.5b
+# Embedding model for document search (not a chat model)
+nomic-embed-text
